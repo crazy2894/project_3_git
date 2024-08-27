@@ -1,2 +1,3 @@
-data\*
-data/yolo_data/train/img/0a668ce2332fe24f3a43b0824a5ed50ba1a447c1ec313f65c1e516a22444a8kyx.jpg
+data/
+code/image_segmentation.ipynb
+code/mento_test.ipynb

@@ -5,3 +5,5 @@ code/image_segmentation.ipynb
 code/mento_test.ipynb
 yolov10/
 requiremets명령어.txt
+chackpoints/yolov10n.pt
+code/yolov8n.pt

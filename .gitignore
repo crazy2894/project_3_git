@@ -1,3 +1,5 @@
+# pip list --format=freeze > requirements.txt
+
 data/
 code/image_segmentation.ipynb
 code/mento_test.ipynb

@@ -8,3 +8,5 @@ chackpoints/yolov10n.pt
 code/yolov8n.pt
 yolov10/
 model_follow_up/
+yolov10_lvis
+api.json

@@ -15,7 +15,7 @@
 
 ### code : 모델 훈련 및 예측, 데이터 확인관련 코드
 ```text
-1_데이터 확인.ipynb          # 데이터 확인 코드
+1_데이터 확인.ipynb           # 데이터 확인 코드
 2_od_YOLO_finetunning.ipynb  # wassup 얼굴 데이터 전이학습
 2_od_YOLO_lvis.ipynb         # lvis 데이터셋 전이학습
 3_lm_gpt2finetunning         # gpt2 전이학습

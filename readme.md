@@ -13,7 +13,7 @@
 
 ## 파일 구조
 
-### code : 모델 훈련 및 예측, 데이터 확인관련 코드
+### 📁 code : 모델 훈련 및 예측, 데이터 확인관련 코드
 ```text
 1_데이터 확인.ipynb           # 데이터 확인 코드
 2_od_YOLO_finetunning.ipynb  # wassup 얼굴 데이터 전이학습
@@ -26,7 +26,7 @@ yolov8x-oiv7.pt              # 객체 검출 모델 라지 사이즈
 yolov10n-face.pt             # wassup dataset으로 전이학습한 모델
 ```
 
-### code_data_gen : api 를 이용한 코드
+### 📁 code_data_gen : api 를 이용한 코드
 ```text
 1_chat_gpt_translate.ipynb   # 텍스트 번역 모델 (oiv7 의 정답 라벨 번역을 위한 코드)
 2_img_pred_and_gen.ipynb     # 이미지를 모델 입력 후 출력 값을 결과를 저장하는 코드

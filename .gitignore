@@ -1,25 +1,6 @@
-# pip list --format=freeze > requirements.txt
-.conda/
-
 data/
-code/image_segmentation.ipynb
-code/mento_test.ipynb
-code/yolov8m-oiv7.pt
-code/yolov8x-oiv7.pt
-code/yolov10_lvis.pt
-code/yolov10n-face.pt
-code/yolov10n.pt
-code/yolov8n.pt
-code/yolov8n.pt
-code_data_gen/output.txt
+t5/
+models/
+yolov10
 
-requiremets명령어.txt
-chackpoints/yolov10n.pt
-
-model_follow_up/
-yolov10_lvis
-api.json
-
-image.png
-
-yolov10/
+test.png

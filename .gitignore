@@ -10,3 +10,6 @@ yolov10/
 model_follow_up/
 yolov10_lvis
 api.json
+code/yolov8m-oiv7.pt
+code/yolov8x-oiv7.pt
+code/yolov10n-face.pt

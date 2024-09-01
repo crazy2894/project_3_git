@@ -35,4 +35,13 @@ yolov10n-face.pt             # wassup dataset으로 전이학습한 모델
 
 
 
+<details>
+  <summary>업데이트 내용</summary>
+  
+  ### 2024-09-02
+    code\1_데이터_확인.ipynb  : fix
+    requiremets.txt         : 필요한 라이브러로 수정(업데이트 중)
+
+</details>
+
 # 링크 : [진행과정 표](https://docs.google.com/spreadsheets/d/1OklwBcfJiqlj7JJHE1Pez9jpgLctun0BPKrBD4HW2A0/edit?gid=1967477975#gid=1967477975) , [기획안](https://docs.google.com/presentation/d/1HKMJk6zLfsEqedcVdcQipHY8V8snd6oP2ajS9FDFgKI/edit#slide=id.p), 

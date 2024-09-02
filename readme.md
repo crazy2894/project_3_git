@@ -21,6 +21,10 @@
 3_lm_gpt2finetunning         # gpt2 전이학습
 3_lm_t5                      # t5 전이학습
 4_pipe_line                  # 입력단부터 최종 출력단 까지으 파이프라인
+```
+
+### 모델 설명
+```text
 yolov8m-oiv7.pt              # 객체 검출 모델 중간 사이즈
 yolov8x-oiv7.pt              # 객체 검출 모델 라지 사이즈
 yolov10n-face.pt             # wassup dataset으로 전이학습한 모델

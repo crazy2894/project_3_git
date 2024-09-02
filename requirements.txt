@@ -7,3 +7,9 @@ ultralytics
 pillow
 google-generativeai
 openai
+TensorFlow
+tensorboard
+transformers
+datasets
+accelerate
+scikit-learn

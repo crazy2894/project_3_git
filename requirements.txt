@@ -4,3 +4,6 @@ pandas
 matplotlib
 opencv-python
 ultralytics
+pillow
+google-generativeai
+openai

@@ -2,5 +2,5 @@ data/
 t5/
 models/
 yolov10/
-frontend
-test.png
+frontend/
+api.json

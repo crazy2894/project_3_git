@@ -1,8 +1,14 @@
+data/image_data
 data/
+data/yolo_data
+data/yolo_oiv7
+data/yolov7_lvis
+
 t5/toy_data
 t5/transfer_0
 t5/transfer_1
 t5/transfer_1_large
+
 models/
 yolov10/
 frontend/

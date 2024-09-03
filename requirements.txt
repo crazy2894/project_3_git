@@ -14,3 +14,4 @@ transformers
 datasets
 accelerate
 scikit-learn
+tf-keras

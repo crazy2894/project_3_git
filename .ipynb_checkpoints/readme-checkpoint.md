@@ -11,21 +11,6 @@
     pip install -r requiremets.txt
     ```
 
-### t5
-
-1. transfer_0 : 기본값으로 훈련
-2. transfer_1 : 
-  a. 공통 사항
-    - 드롭 아웃 비율 조정 기본값 : 0.1 -> 0.2<br>
-    - 학습 률 조정<br>
-    - 웜 업 스텝 설정<br>
-    - 배치 사이즈 : 코랩에서 돌릴때 시도<br>
-    - l2 정규화 (weight decay)<br>
-    - gredient clipping 그라디언트 조정으로 학습 안정화 시키기<br>
-    - 레이블 스무딩<br>
-  b. transfer_1 : 로컬 환경 및 기본 base 모델 이용<br>
-  c. transfer_1_large_colab : colab 환경 및 large 모델이용
-
 ## 파일 구조
 
 ### 📁 code : 모델 훈련 및 예측, 데이터 확인관련 코드

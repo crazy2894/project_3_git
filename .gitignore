@@ -10,6 +10,9 @@ models/t5/transfer_1_large
 
 models/yolov10/pt_models/
 models/yolov10/runs/
-models/od_models/yolov10/
+
+models/gpt2/gpt2_base_0/
+models/gpt2/kogpt2_0/
+models/gpt2/kogpt2_1/
 frontend/
 api.json

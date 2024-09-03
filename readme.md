@@ -12,7 +12,8 @@
     ```
 
 ### t5
-
+- 사용 데이터 셋 : [gpt 생성 데이터](data/text_data/output_text.json)
+  -[gpt 생성 코드](code/code_data_gen/3_textdata_generating)
 - transfer_0 : 기본값으로 훈련
 - transfer_1 : 
   - 공통 사항

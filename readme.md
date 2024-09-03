@@ -10,8 +10,9 @@
     cd project_3_git
     pip install -r requiremets.txt
     ```
+## Language Model
 
-### t5
+### gpt 또는 gemini 를 이용한 데이터 셋 생성
 - 사용 데이터 셋 : [gpt 생성 데이터](data/text_data/output_text.json)
   - [gpt 생성 코드](code_data_gen/3_textdata_generating.ipynb)
   - 프롬프팅 : 
@@ -27,23 +28,61 @@
     sns 사진 요소 : {input_}
     sns 댓글 : """
     ```
+  - 출력 예시 :
+    ```py
+    input_ = '공포, 헤드폰'
+    output_ = '아찔한 분위기네요! 🎧 어떤 음악 듣고 계신가요? 궁금해요! 😊'
+    ```
 
-- transfer_0 : 기본값으로 훈련
-- transfer_1 : 
-  - 공통 사항
-    - 드롭 아웃 비율 조정 기본값 : 0.1 -> 0.2<br>
-    - 학습 률 조정<br>
-    - 웜 업 스텝 설정<br>
-    - 배치 사이즈 : 코랩에서 돌릴때 시도<br>
-    - l2 정규화 (weight decay)<br>
-    - gredient clipping 그라디언트 조정으로 학습 안정화 시키기<br>
-    - 레이블 스무딩<br>
-  - transfer_1 : 로컬 환경 및 기본 base 모델 이용
-  - transfer_1_large_colab : colab 환경 및 large 모델이용
+### t5 (Text-to-Text Transfer Transformer)
 
-- t5 비교 그래프
-  ![비교 그래프](models/t5/val_loss_comparison.png)
+- 학습 데이터 형식
+  ```
+  input_data = ['슬픔, 분노', ...]
+  output_data = ['감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
+  ```
 
+#### 모델 훈련
+  - transfer_0 : 기본값으로 훈련
+  - transfer_1 : 
+    - 드롭아웃 비율 0.1 -> 0.2
+    - 훈련시 추가 인자
+      ```
+      learning_rate=5e-5,          # 기본값에서 시작
+      lr_scheduler_type="linear",  # 스케줄러
+      warmup_steps=500,            # 500 스텝 동안 학습률을 점진적으로 증가
+      weight_decay=0.01,           # l2 정규화 기법 중 하나
+      max_grad_norm=1.0,           # 그라디언트 클리핑
+      ```
+    - transfer_1 : 로컬 환경 및 기본 base 모델 이용
+    - transfer_1_large_colab : colab 환경 및 large 모델이용
+
+  - t5 비교 그래프
+    ![비교 그래프](models/t5/val_loss_comparison.png)
+
+### gpt2 (*Language Models are* **Unsupervised** *Multitask Learners*)
+- 즉 정답 라벨은 없다. (비지도 학습)
+  - 학습 데이터 형식
+    ```
+    input_data = ['슬픔, 분노, 감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
+    ```
+    또는 텍스트 로 시퀀스 데이터 안에 명시한다.
+    ```
+    input_data = ['입력 : 슬픔, 분노 \n 출력 : 감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
+    ```
+    또한 예측시 모델의 입력값으로 ```'입력 : 슬픔, 분노 \n 출력 : ``` 와 같이 입력하여 출력값을 얻어야함
+
+- gpt2_base_0 : gpt2 베이스 모델 이용
+- kogpt2_0 : 기본 하이퍼 파라미터 이용
+- kogpt2_1 : 
+    - 훈련시 추가 인자
+      ```
+      learning_rate=5e-5,          # 기본값에서 시작
+      lr_scheduler_type="linear",  # 스케줄러
+      warmup_steps=500,            # 500 스텝 동안 학습률을 점진적으로 증가
+      weight_decay=0.01,           # l2 정규화 기법 중 하나
+      max_grad_norm=1.0,           # 그라디언트 클리핑
+      ```
 
 <details>
   <summary>삭제 내용</summary>

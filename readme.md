@@ -42,7 +42,7 @@
   - transfer_1_large_colab : colab 환경 및 large 모델이용
 
 - t5 비교 그래프
-  ![비교 그래프](t5/val_loss_comparison.png)
+  ![비교 그래프](models/t5/val_loss_comparison.png)
 
 
 <details>

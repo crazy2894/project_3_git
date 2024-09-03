@@ -3,12 +3,13 @@ data/yolo_data
 data/yolo_oiv7
 data/yolov10_lvis
 
-t5/toy_data
-t5/transfer_0
-t5/transfer_1
-t5/transfer_1_large
+models/t5/toy_data
+models/t5/transfer_0
+models/t5/transfer_1
+models/t5/transfer_1_large
 
-od_models/
-yolov10/
+models/yolov10/pt_models/
+models/yolov10/runs/
+models/od_models/yolov10/
 frontend/
 api.json

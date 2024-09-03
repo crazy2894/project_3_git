@@ -59,6 +59,23 @@
 
   - t5 비교 그래프
     ![비교 그래프](models/t5/val_loss_comparison.png)
+  
+  - 결론 : 세 모델의 큰 차이는 없어 보인다. 그러므로 이중 효율좋고 loss 최저값이 낮은 1번(default) 로 선택 
+    - 각 모델별 특징
+    ```text
+    # loss 최저
+    - default = 0.1783
+    - setting 1 = 0.1790
+    - setting 1 with colab = 0.1745
+
+    # 요구 vram
+    - default = 6gb
+    - setting 1 = 6gb
+    - setting 1 with colab = 29gb
+    ```
+
+
+
 
 ### gpt2 (*Language Models are* **Unsupervised** *Multitask Learners*)
 - 즉 정답 라벨은 없다. (비지도 학습)

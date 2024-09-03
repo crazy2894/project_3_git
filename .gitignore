@@ -1,18 +1,26 @@
+# DATA
 data/image_data
 data/yolo_data
 data/yolo_oiv7
 data/yolov10_lvis
 
+# t5
 models/t5/toy_data
 models/t5/transfer_0
 models/t5/transfer_1
 models/t5/transfer_1_large
 
+# gpt2
+models/gpt2/gpt2_base_0/
+models/gpt2/gpt2_base_1/
+
+models/gpt2/kogpt2_0/
+models/gpt2/kogpt2_1/
+models/gpt2/kogpt2_2/
+
+# yolo
 models/yolov10/pt_models/
 models/yolov10/runs/
 
-models/gpt2/gpt2_base_0/
-models/gpt2/kogpt2_0/
-models/gpt2/kogpt2_1/
 frontend/
 api.json

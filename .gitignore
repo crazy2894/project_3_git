@@ -1,5 +1,8 @@
 data/
-t5/
+t5/toy_data
+t5/transfer_0
+t5/transfer_1
+t5/transfer_1_large
 models/
 yolov10/
 frontend/

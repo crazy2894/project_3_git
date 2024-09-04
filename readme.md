@@ -10,6 +10,9 @@
     cd project_3_git
     pip install -r requiremets.txt
     ```
+
+**모든 모델에서 earlystopping ,patient = 10 이용**
+
 ## Language Model
 
 ### gpt 또는 gemini 를 이용한 데이터 셋 생성
@@ -60,7 +63,7 @@
   - t5 비교 그래프
     ![비교 그래프](models/t5/val_loss_comparison.png)
   
-  - 결론 : 세 모델의 큰 차이는 없어 보인다. 그러므로 이중 효율좋고 loss 최저값이 낮은 1번(default) 로 선택 
+  - 결론 : 세 모델의 큰 차이는 없어 보인다. 그러므로 이중 효율좋고 loss 최저값이 낮은 0번(default) 로 선택 
     - 각 모델별 특징
     ```text
     # loss 최저
@@ -80,26 +83,73 @@
 ### gpt2 (*Language Models are* **Unsupervised** *Multitask Learners*)
 - 즉 정답 라벨은 없다. (비지도 학습)
   - 학습 데이터 형식
-    ```
-    input_data = ['슬픔, 분노, 감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
-    ```
-    또는 텍스트 로 시퀀스 데이터 안에 명시한다.
-    ```
-    input_data = ['입력 : 슬픔, 분노 \n 출력 : 감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
-    ```
-    또한 예측시 모델의 입력값으로 ```'입력 : 슬픔, 분노 \n 출력 : ``` 와 같이 입력하여 출력값을 얻어야함
+    - 첫 번째 방식
+      ```
+      input_data = ['슬픔, 분노, 감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
+      ```
+    - 두 번째 방식
 
-- gpt2_base_0 : gpt2 베이스 모델 이용
-- kogpt2_0 : 기본 하이퍼 파라미터 이용
-- kogpt2_1 : 
-    - 훈련시 추가 인자
+      또는 텍스트 로 시퀀스 데이터 안에 명시한다.
       ```
-      learning_rate=5e-5,          # 기본값에서 시작
-      lr_scheduler_type="linear",  # 스케줄러
-      warmup_steps=500,            # 500 스텝 동안 학습률을 점진적으로 증가
-      weight_decay=0.01,           # l2 정규화 기법 중 하나
-      max_grad_norm=1.0,           # 그라디언트 클리핑
+      input_data = ['입력 : 슬픔, 분노 \n 출력 : 감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
       ```
+      또한 예측시 모델의 입력값으로 ```'입력 : 슬픔, 분노 \n 출력 : ``` 와 같이 입력하여 출력값을 얻어야함
+
+#### [kogpt2](https://huggingface.co/skt/kogpt2-base-v2)
+skt 의 kogpt2 이용 : https://huggingface.co/skt/kogpt2-base-v2
+- 시도 0
+  ```py
+  배치 : 16
+  vram 요구 : 약 6gb
+  입력 데이터 형식 : 첫 번째 방식의 학습 데이터
+  하이퍼 파라미터 : 기본 값
+  ```
+- 시도 1
+  ```py
+  배치 : 16
+  vram 요구 : 약 6gb
+  입력 데이터 형식 : 첫 번째 방식의 학습 데이터
+  하이퍼 파라미터 :
+      learning_rate=5e-5,
+      lr_scheduler_type="linear",
+      warmup_steps=500,
+      weight_decay=0.01[
+      max_grad_norm=1.0,
+  ```
+- 시도 2
+  ```py
+  배치 : 16
+  vram 요구 : 약 6gb
+  입력 데이터 형식 : 두 번째 방식의 학습 데이터
+  하이퍼 파라미터 :
+    learning_rate=5e-5,
+    lr_scheduler_type="linear",
+    warmup_steps=500,
+    weight_decay=0.01[
+    max_grad_norm=1.0,
+  ```
+
+#### [gpt2-base](https://huggingface.co/openai-community/gpt2)
+open ai 의 gpt2-base 이용 : https://huggingface.co/openai-community/gpt2
+- 시도 0
+  ```py
+  배치 : 10
+  vram 요구 : 약 5gb
+  입력 데이터 형식 : 두 번째 방식의 학습 데이터
+  하이퍼 파라미터 : 기본 값
+  ```
+- 시도 1
+  ```py
+  배치 : 10
+  vram 요구 : 약 5gb
+  입력 데이터 형식 : 두 번째 방식의 학습 데이터
+  하이퍼 파라미터 :
+      learning_rate=5e-5,
+      lr_scheduler_type="linear",
+      warmup_steps=500,
+      weight_decay=0.01[
+      max_grad_norm=1.0,
+  ```
 
 <details>
   <summary>삭제 내용</summary>

@@ -150,6 +150,38 @@ open ai 의 gpt2-base 이용 : https://huggingface.co/openai-community/gpt2
       weight_decay=0.01[
       max_grad_norm=1.0,
   ```
+- 비교 그래프
+  ![비교 그래프](models/gpt2//val_loss_comparison.png)
+
+- 각 모델 최저 loss 및 스텝
+    
+    kogpt2_0
+    Step     Value
+    7000  0.293683
+    
+    kogpt2_1
+    Step     Value
+    6000  0.293336
+    
+    kogpt2_2
+    Step    Value
+    313  0.72245
+    
+    gpt2_base_0
+    Step     Value
+    1565  0.716322
+    
+    gpt2_base_1
+    Step     Value
+    2000  0.925404
+    
+
+#### 결론
+
+현 프로젝트에서는 kogpt 보다 gpt2 기본 모델의 성능의 결과가 더 좋았다
+좀 더 많은 하이퍼 파라미터 튜닝은 시간 관계상 생략 하였다
+
+추후 하이퍼 파라미터를 찾는 과정이 필요 할 것이다 (grid search or randomized search)
 
 <details>
   <summary>삭제 내용</summary>

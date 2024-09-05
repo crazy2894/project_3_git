@@ -95,6 +95,9 @@ model_for_trian = YOLOv10("models/yolov10/pt_models/yolov10n.pt")
 model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience=10)
 ```
 - 소요 시간 : gpu 3060 - 63 epochs completed in 6.935 hours.
+- 에포크별 val 메트릭 비교
+  
+
 
 ## Language Model
 

@@ -1,4 +1,0 @@
-train: ./data/yolo_data/train
-val: ./data/yolo_data/val
-nc: 4
-names: ['anger', 'sad', 'panic', 'happy']

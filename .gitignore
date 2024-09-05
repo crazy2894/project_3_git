@@ -35,3 +35,5 @@ models/yolov10/runs/detect/train/val_batch1_labels.jpg
 models/yolov10/runs/detect/train/val_batch1_pred.jpg
 models/yolov10/runs/detect/train/val_batch2_labels.jpg
 models/yolov10/runs/detect/train/val_batch2_pred.jpg
+models/yolov8x-oiv7.pt
+models/yolov10n-face.pt

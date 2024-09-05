@@ -26,14 +26,10 @@ models/yolov10/runs/
 frontend/
 api.json
 
-yolov10/runs/detect/train/args.yaml
-yolov10/runs/detect/train/events.out.tfevents.1725412063.tommy.10272.0
-yolov10/runs/detect/train/labels_correlogram.jpg
-yolov10/runs/detect/train/labels.jpg
-yolov10/runs/detect/train/results.csv
+yolov8n.pt
 yolov10/runs/detect/train/train_batch0.jpg
 yolov10/runs/detect/train/train_batch1.jpg
 yolov10/runs/detect/train/train_batch2.jpg
+yolov10/runs/detect/train/events.out.tfevents.1725412063.tommy.10272.0
 yolov10/runs/detect/train/weights/best.pt
 yolov10/runs/detect/train/weights/last.pt
-yolov8n.pt

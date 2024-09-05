@@ -16,6 +16,14 @@
 ## Oject Dection + classification 모델
 ### 사용 데이터 셋 : 안면 데이터
 
+### detectron2 from facebook
+```bash
+git clone https://github.com/facebookresearch/detectron2.git
+python -m pip install -e detectron2
+```
+### Faster R-CNN
+
+
 ### YOLOv10
 #### [**데이터 전처리**](code\1_2데이터_전처리_yolo.ipynb)
   ```py

@@ -15,3 +15,6 @@ datasets
 accelerate
 scikit-learn
 tf-keras
+torch
+torchvision
+pillow

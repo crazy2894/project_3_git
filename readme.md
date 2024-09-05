@@ -433,7 +433,9 @@ if __name__ == "__main__":
 </details>
 
 #### 파이프 라인 테스트
-![epoch](test.png)
+<div style="display: flex; justify-content: space-between;">
+    <img src="test.png" alt="PR Curve 1" style="width: 45%; height: auto;">
+</div>
 
 ##### yolov10n-face + yolov8x-oiv7 + t5
 입력값: 공포,모자 | 출력값: 무서운 분위기가 느껴지네요! 😱 어떤 상황인지 궁금해요!

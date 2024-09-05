@@ -13,6 +13,82 @@
 
 **모든 모델에서 earlystopping ,patient = 10 이용**
 
+## Oject Dection + classification 모델
+### 사용 데이터 셋 : 안면 데이터
+
+### YOLOv10
+#### [**데이터 전처리**](code\1_2데이터_전처리_yolo.ipynb)
+  ```py
+  json 형식의 파일을 파일 하나 하나 분리하여 동일 폴더에 동일 이름으로 txt 파일로 저장
+  기본적인 절대 위치의 형식을 yolo 에서 요구하는 상대 중심 위치와 상대 박스 크기로 지정 하였음
+  ```
+  - 전처리 코드 함수 정의
+    ```py
+    def convert_bbox_to_yolo_format(image_size, bbox):
+      """
+      바운딩 박스를 YOLO 형식으로 변환.
+      :param image_size: (width, height) 이미지 크기
+      :param bbox: {'minX': float, 'minY': float, 'maxX': float, 'maxY': float} 바운딩 박스 좌표
+      :return: (x_center, y_center, width, height) YOLO 형식의 바운딩 박스
+      """
+      dw = 1.0 / image_size[0]
+      dh = 1.0 / image_size[1]
+      x_center = (bbox['minX'] + bbox['maxX']) / 2.0
+      y_center = (bbox['minY'] + bbox['maxY']) / 2.0
+      width = bbox['maxX'] - bbox['minX']
+      height = bbox['maxY'] - bbox['minY']
+
+      # YOLO 형식에 맞게 좌표를 정규화
+      x_center = x_center * dw
+      y_center = y_center * dh
+      width = width * dw
+      height = height * dh
+
+      return (x_center, y_center, width, height)
+    ```
+  - 전처리 후 파일 저장 함수 정의
+    ```py
+    def save_annotations(json_data, output_dir, image_size):
+    """
+    이미지를 yolo 에 맞게
+    txt 파일 생성 (위의 함수를 불러와 형식 변환 후 저장.)
+    """
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    for item in json_data:
+        image_file = item['filename']
+        image_name, _ = os.path.splitext(image_file)
+        txt_file_path = os.path.join(output_dir, f"{image_name}.txt")
+        
+        with open(txt_file_path, 'w') as f:
+            # Iterate over annotations (A, B, C)
+            annot = item.get('annot_A')
+            print(annot)
+            if annot:
+                bbox = annot['boxes']
+                face_exp = item['faceExp_uploader']
+                class_id = class_to_id.get(face_exp, -1)
+                if class_id == -1:
+                    class_id = 3
+                print(class_id)
+                if class_id != -1:
+                    yolo_bbox = convert_bbox_to_yolo_format(image_size, bbox)
+                    print(yolo_bbox)
+                    f.write(f"{class_id} {' '.join(map(str, yolo_bbox))}\n")
+                    print(f"{class_id} {' '.join(map(str, yolo_bbox))}\n")
+    ```
+  - yaml 파일 생성
+    ```text
+    train: ./data/yolo_data/train
+    val: ./data/yolo_data/val
+    nc: 4
+    names: ['anger', 'sad', 'panic', 'happy']
+    ```
+#### 모델 훈련
+
+[훈련 코드](code/2_YOLO_1_transfer_1.ipynb)
+
 ## Language Model
 
 ### gpt 또는 gemini 를 이용한 데이터 셋 생성

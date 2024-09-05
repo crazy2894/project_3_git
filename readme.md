@@ -96,9 +96,30 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
 ```
 - 소요 시간 : gpu 3060 - 63 epochs completed in 6.935 hours.
 - 에포크별 val 메트릭 비교
-  
+  ![epoch](models/yolov10/runs/detect/train/val_losses_comparison.png)
 
-
+  1. **val/box_om** 객체의 위치 예측(바운딩 박스)의 손실을
+      - 초기 손실이 비교적 높다가 epoch가 진행될수록 꾸준히 감소. 이는 모델이 학습하면서 점차 객체의 위치를 더 정확히 예측하고 있음
+  2. **val/cls_om (위 중간)** 클래스 분류에 대한 손실
+      - 처음에는 손실이 높지만 epoch가 진행됨에 따라 급격히 감소하고 이후 점진적으로 안정화. 모델이 객체를 올바르게 분류하는 능력이 개선.
+  3. **val/dfl_om (위 오른쪽)** Distribution Focal Loss 여러 클래스 간의 분포를 고려하여 손실을 계산
+      - epoch가 진행됨에 따라 약간 상승하는 패턴을 하지만 대부분의 경우 다른 손실들이 감소하고 있기 때문에 큰 문제 아니라 판단.
+  4. **val/box_oo (아래 왼쪽)**
+      - 모델이 점차 바운딩 박스를 더 정확하게 예측.
+  5. **val/cls_oo (아래 중간)**
+      - 모델의 분류 성능이 개선되고 있음을 보여줍니다.
+  6. **val/dfl_oo (아래 오른쪽)**
+      - DFL 손실의 또 다른 그래프입니다.
+      - 이 역시 초기에는 약간 높은 손실을 보이지만 이후 감소하고 안정화.
+- 요약
+    - 대부분의 손실 값들은 epoch가 진행됨에 따라 안정적으로 감소, 특히 **val/box_om**, **val/cls_om**, **val/box_oo**, **val/   cls_oo** 같은 주요 손실 항목들이 학습이 진행될수록 줄어들고 있어 모델의 성능이 개선되고 있음
+    - 다만 **val/dfl_om**은 epoch가 진행될수록 약간의 증가를 보이지만, 전체적인 트렌드를 크게 해치지 않으며 다른 손실들이 꾸준히    줄어들고 있으므로 모델 성능에는 큰 영향을 미치지 않을 거라고 예상. 
+    - 이 결과로 볼 때, 학습 과정이 잘 진행되고 있으며 모델의 성능이 점차 좋아지고 있는 것으로 해석
+- 최종 val/metrics
+  <div style="display: flex; justify-content: space-between;">
+      <img src="models/yolov10/runs/detect/train/PR_curve.png" alt="PR Curve 1" style="width: 45%; height: auto;">
+      <img src="models/yolov10/runs/detect/train/F1_curve.png" alt="PR Curve 2" style="width: 45%; height: auto;">
+  </div>
 ## Language Model
 
 ### gpt 또는 gemini 를 이용한 데이터 셋 생성

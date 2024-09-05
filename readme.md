@@ -116,10 +116,10 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
     - 다만 **val/dfl_om**은 epoch가 진행될수록 약간의 증가를 보이지만, 전체적인 트렌드를 크게 해치지 않으며 다른 손실들이 꾸준히    줄어들고 있으므로 모델 성능에는 큰 영향을 미치지 않을 거라고 예상. 
     - 이 결과로 볼 때, 학습 과정이 잘 진행되고 있으며 모델의 성능이 점차 좋아지고 있는 것으로 해석
 - 최종 val/metrics
-  <div style="display: flex; justify-content: space-between;">
-      <img src="models/yolov10/runs/detect/train/PR_curve.png" alt="PR Curve 1" style="width: 45%; height: auto;">
-      <img src="models/yolov10/runs/detect/train/F1_curve.png" alt="PR Curve 2" style="width: 45%; height: auto;">
-  </div>
+  - f1 score
+    ![epoch](models/yolov10/runs/detect/train/PR_curve.png)
+  - PR curve
+    ![epoch](models/yolov10/runs/detect/train/F1_curve.png)
 ## Language Model
 
 ### gpt 또는 gemini 를 이용한 데이터 셋 생성

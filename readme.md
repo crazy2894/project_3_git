@@ -13,6 +13,14 @@
 
 **모든 모델에서 earlystopping ,patient = 10 이용**
 
+## to do list 및 ckeck list
+```
+- 공식 tta 성능지표 확인 후 적용 가능시 적용시 비교
+
+- 각각 왜 이 모델을 썼는지 정확한 사항 기재
+- 지표 및 성과 또한 정확히 공식 tta 기준 확인후 비교 지표로 지정
+- 15 분 발표 시간 맞추기
+```
 # Oject Detection + classification 모델
 ### 사용 모델 : 
 - faster_rcnn_R_50_FPN_3x : 얼굴 데이터 감정 분류 전이 **학습**

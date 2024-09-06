@@ -13,19 +13,139 @@
 
 **모든 모델에서 earlystopping ,patient = 10 이용**
 
-## Oject Dection + classification 모델
-### 사용 데이터 셋 : 안면 데이터
+# Oject Detection + classification 모델
+### 사용 모델 : 
+- faster_rcnn_R_50_FPN_3x : 얼굴 데이터 감정 분류 전이 **학습**
+- yolov10n : 얼굴 데이터 감정 분류 전이 **학습**
+- yolov8x-oiv7 : 객체 검출 사전 학습 모델 **이용**
+### 사용 데이터 셋 :
+- 이미지 데이터 셋: wassup 안면 데이터
+  - yolo 형식으로 annotation 변환 : [코드](code/1_2데이터_전처리_yolo.ipynb)
+  - yolo 형식에서 COCO데이터셋으로 변환 : [코드](code/1_3데이터_전처리_ssd,rcnn.ipynb)
 
+- 텍스트 데이터 셋 : 출력된 이미지 라벨[감정 분류 및 ,yolov8x-oiv7 출력] 을 이용하여 생성 : [코드](code_data_gen/3_textdata_generating.ipynb)
+  - gemini 및 gpt api 이용 및 프롬프트 엔지니어링
+    ```py
+    def prompting(input_):
+      return f"""
+    사진에 대한 댓글 입력
+    질문 금지
+    sns 사진 요소 : '분노, 여자, 인간의 얼굴, 공, 의류'
+    sns 댓글 : 화가 난 듯한 표정이네! 🏀 공은 무슨 종류야? 옷도 멋지다! 😊
+    
+    예측 한 문장
+    sns 사진 요소 : {input_}
+    sns 댓글 : """
+    ```
+
+## Obect Detection 1 : Faster R-CNN
 ### detectron2 from facebook
-```bash
-git clone https://github.com/facebookresearch/detectron2.git
-python -m pip install -e detectron2
+- 기본적으로 detectron2 의 faster-rcnn 을 이용함
+  ```bash
+  git clone https://github.com/facebookresearch/detectron2.git
+  python -m pip install -e detectron2
+  ```
+
+### 기본 정보
 ```
-### Faster R-CNN
+- 소요 시간 : 진행중 ... (과적합 전까지의 소요 시간)
+- 필요 리소스 : 약 4GB의 메모리
+```
 
+###  [**데이터 전처리**](code/1_3데이터_전처리_ssd,rcnn.ipynb)
+  ```py
+  # 기본 적으로 COCO 데이터 셋과동일한 형식
+  # 사진의 width 와 height를 불러올 때 올바르게 불러오지 않음
+    # => exif 를 이용하여 회전 데이터를 가져와서 적용함
+    def read_image_size_from_exif(image_path):
+      with Image.open(image_path) as img:
+          # EXIF 데이터 가져오기
+          exif = img._getexif()
 
-### YOLOv10
-#### [**데이터 전처리**](code\1_2데이터_전처리_yolo.ipynb)
+          # EXIF 데이터가 없을 경우 기본 크기 반환
+          if exif is None:
+              return img.size
+
+          # Orientation 태그 가져오기
+          orientation_key = [key for key, val in TAGS.items() if val ==   'Orientation'][0]
+          orientation = exif.get(orientation_key, 1)  # EXIF에서 Orientation  값이 없으면 기본값 1을 사용
+
+          # Orientation에 따라 이미지 회전
+          if orientation == 3:
+              img = img.rotate(180, expand=True)
+          elif orientation == 6:
+              img = img.rotate(270, expand=True)
+          elif orientation == 8:
+              img = img.rotate(90, expand=True)
+
+          # 회전된 후의 이미지 크기 반환
+          return img.size
+  # 이후 YOLO 형식의 annotation => COCO 형식의 annotation
+  ```
+###  [**훈련 코드**](code/2_RCNN_0_transfer.ipynb)
+  - 설정 하이퍼 파라미터에 대한 설명
+    ```py
+    cfg = get_cfg()
+
+    # 어떤 백본 모델을 이용할지 설정 (현제 설정값 : resnet-50) 추가 백본 확인
+    #https://github.com/facebookresearch/detectron2/tree/main/configs/COCO-Detection
+    cfg.merge_from_file("detectron2/configs/COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml")
+    # 데이터 셋 설정
+    cfg.DATASETS.TRAIN = ("face_data_set",)
+    cfg.DATASETS.TEST = ("face_data_set_valid",)
+
+    # 데이터 로딩 사용 프로세서 수
+    cfg.DATALOADER.NUM_WORKERS = 2
+
+    # 초기 가중치 COCO 데이터셋을 사용해 학습된 Mask R-CNN 모델의 가중치를 사용
+    cfg.MODEL.WEIGHTS = "detectron2://COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x/137849600/model_final_f10217.pkl"
+    
+    # 각 배치(batch)당 이미지 수를 지정
+    cfg.SOLVER.IMS_PER_BATCH = 16
+
+    # 학습의 기본 학습률(learning rate)을 지정
+    cfg.SOLVER.BASE_LR = 0.001
+    # 최대 학습 반복 횟수(iterations)를 지정
+    cfg.SOLVER.MAX_ITER = 1000
+
+    # 사진 리 사이징 (yolo 와 같은 비교를 위해)
+    cfg.INPUT.MIN_SIZE_TRAIN = 512
+    cfg.INPUT.MAX_SIZE_TRAIN = 512
+    cfg.INPUT.MIN_SIZE_TEST = 512
+    cfg.INPUT.MAX_SIZE_TEST = 512
+
+    # 데이터 증강
+    cfg.INPUT.RANDOM_FLIP = "horizontal"
+    cfg.INPUT.RANDOM_ROTATION = 30
+    cfg.INPUT.CROP = CN({"ENABLED": True, "TYPE": "relative_range", "SIZE": [0.8, 0.8]})
+
+    # Region Of Interest 배치 크기 지정 및 클래스 개수 지정
+    cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 128
+    cfg.MODEL.ROI_HEADS.NUM_CLASSES = 4
+
+    # 출력
+    cfg.OUTPUT_DIR = "./models/faster_rcnn_R_50_FPN_3x"
+
+    # 평가 / iter
+    cfg.TEST.EVAL_PERIOD = 1000
+
+    # 저장 / iter
+    cfg.SOLVER.CHECKPOINT_PERIOD = 500
+
+    # 웜업 iter 정하고 스케줄러 이름 정하기
+    cfg.SOLVER.LR_SCHEDULER_NAME = "WarmupCosineLR"
+    cfg.SOLVER.WARMUP_ITERS = 500
+    ```
+
+## YOLOv10
+### 기본 정보
+```
+- 소요 시간 : 약 7 시간 (총 63 에포크) - early stopping 까지의 시간
+- early stopping petient : 10
+- 필요 리소스 : 약 4GB의 메모리
+```
+
+### [**데이터 전처리**](code/1_2데이터_전처리_yolo.ipynb)
   ```py
   json 형식의 파일을 파일 하나 하나 분리하여 동일 폴더에 동일 이름으로 txt 파일로 저장
   기본적인 절대 위치의 형식을 yolo 에서 요구하는 상대 중심 위치와 상대 박스 크기로 지정 하였음
@@ -93,9 +213,8 @@ python -m pip install -e detectron2
     nc: 4
     names: ['anger', 'sad', 'panic', 'happy']
     ```
-#### 모델 훈련
 
-[훈련 코드](code/2_YOLO_1_transfer_1.ipynb)
+### [**훈련 코드**](code/2_YOLO_1_transfer_1.ipynb)
 ```py
 from ultralytics.models import YOLOv10
 
@@ -130,7 +249,6 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
     ![epoch](models/yolov10/runs/detect/train/F1_curve.png)
 
 ## Language Model
-
 ### gpt 또는 gemini 를 이용한 데이터 셋 생성
 - 사용 데이터 셋 : [gpt 생성 데이터](data/text_data/output_text.json)
   - [gpt 생성 코드](code_data_gen/3_textdata_generating.ipynb)
@@ -211,96 +329,80 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
       ```
       또한 예측시 모델의 입력값으로 ```'입력 : 슬픔, 분노 \n 출력 : ``` 와 같이 입력하여 출력값을 얻어야함
 
-#### [kogpt2](https://huggingface.co/skt/kogpt2-base-v2)
-skt 의 kogpt2 이용 : https://huggingface.co/skt/kogpt2-base-v2
-- 시도 0
-  ```py
-  배치 : 16
-  vram 요구 : 약 6gb
-  입력 데이터 형식 : 첫 번째 방식의 학습 데이터
-  하이퍼 파라미터 : 기본 값
-  ```
-- 시도 1
-  ```py
-  배치 : 16
-  vram 요구 : 약 6gb
-  입력 데이터 형식 : 첫 번째 방식의 학습 데이터
-  하이퍼 파라미터 :
-      learning_rate=5e-5,
-      lr_scheduler_type="linear",
-      warmup_steps=500,
-      weight_decay=0.01[
-      max_grad_norm=1.0,
-  ```
-- 시도 2
-  ```py
-  배치 : 16
-  vram 요구 : 약 6gb
-  입력 데이터 형식 : 두 번째 방식의 학습 데이터
-  하이퍼 파라미터 :
-    learning_rate=5e-5,
-    lr_scheduler_type="linear",
-    warmup_steps=500,
-    weight_decay=0.01[
-    max_grad_norm=1.0,
-  ```
-
-#### [gpt2-base](https://huggingface.co/openai-community/gpt2)
-open ai 의 gpt2-base 이용 : https://huggingface.co/openai-community/gpt2
-- 시도 0
-  ```py
-  배치 : 10
-  vram 요구 : 약 5gb
-  입력 데이터 형식 : 두 번째 방식의 학습 데이터
-  하이퍼 파라미터 : 기본 값
-  ```
-- 시도 1
-  ```py
-  배치 : 10
-  vram 요구 : 약 5gb
-  입력 데이터 형식 : 두 번째 방식의 학습 데이터
-  하이퍼 파라미터 :
+- skt 의 kogpt2 이용 : https://huggingface.co/skt/kogpt2-base-v2
+  - 시도 0
+    ```py
+    배치 : 16
+    vram 요구 : 약 6gb
+    입력 데이터 형식 : 첫 번째 방식의 학습 데이터
+    하이퍼 파라미터 : 기본 값
+    ```
+  - 시도 1
+    ```py
+    배치 : 16
+    vram 요구 : 약 6gb
+    입력 데이터 형식 : 첫 번째 방식의 학습 데이터
+    하이퍼 파라미터 :
+        learning_rate=5e-5,
+        lr_scheduler_type="linear",
+        warmup_steps=500,
+        weight_decay=0.01[
+        max_grad_norm=1.0,
+    ```
+  - 시도 2
+    ```py
+    배치 : 16
+    vram 요구 : 약 6gb
+    입력 데이터 형식 : 두 번째 방식의 학습 데이터
+    하이퍼 파라미터 :
       learning_rate=5e-5,
       lr_scheduler_type="linear",
       warmup_steps=500,
       weight_decay=0.01,
       max_grad_norm=1.0,
-  ```
+    ```
+
+
+- open ai 의 gpt2-base 이용 : https://huggingface.co/openai-community/gpt2
+  - 시도 0
+    ```py
+    배치 : 10
+    vram 요구 : 약 5gb
+    입력 데이터 형식 : 두 번째 방식의 학습 데이터
+    하이퍼 파라미터 : 기본 값
+    ```
+  - 시도 1
+    ```py
+    배치 : 10
+    vram 요구 : 약 5gb
+    입력 데이터 형식 : 두 번째 방식의 학습 데이터
+    하이퍼 파라미터 :
+        learning_rate=5e-5,
+        lr_scheduler_type="linear",
+        warmup_steps=500,
+        weight_decay=0.01,
+        max_grad_norm=1.0,
+    ```
 - 비교 그래프
   ![비교 그래프](models/gpt2//val_loss_comparison.png)
 
 - 각 모델 최저 loss 및 스텝
-    
-    kogpt2_0
-    Step     Value
-    7000  0.293683
-    
-    kogpt2_1
-    Step     Value
-    6000  0.293336
-    
-    kogpt2_2
-    Step    Value
-    313  0.72245
-    
-    gpt2_base_0
-    Step     Value
-    1565  0.716322
-    
-    gpt2_base_1
-    Step     Value
-    2000  0.925404
+  - kogpt2_0 loss : 0.293683
+  - kogpt2_1 loss : 0.293336
+  - kogpt2_2 loss : 0.72245
+  - gpt2_base_0 loss : 0.716322
+  - gpt2_base_1 loss : 0.925404
 
-#### 결론
+### 결론 GPT2 VS T5
 
-현 프로젝트에서는 kogpt 보다 gpt2 기본 모델의 성능의 결과가 더 좋았다
-좀 더 많은 하이퍼 파라미터 튜닝은 시간 관계상 생략 하였다
-
-추후 하이퍼 파라미터를 찾는 과정이 필요 할 것이다 (grid search or randomized search)
+- 현 프로젝트에서 gpt2 계열 모델중 kogpt 보다 gpt2 기본 모델의 성능의 결과가 더 좋았다
+- 또한 가장 좋은 모델은 T5 였다.
 
 ## 모델 연결 파이프 라인
 
-링크 : [99_pipe_line.ipynb](code/99_pipe_line.ipynb)
+### 🍿[프론트 엔드 프로젝트 링크](https://github.com/crazy2894/project_3_service)🍿
+
+코드 : [99_pipe_line.ipynb](code/99_pipe_line.ipynb)
 각 모델을 불러와서 나온 결과
 
 <details>

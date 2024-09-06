@@ -1,5 +1,6 @@
 datasets/
 # DATA
+data/
 data/image_data
 data/yolo_data
 data/yolo_oiv7

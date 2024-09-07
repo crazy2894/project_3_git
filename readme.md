@@ -16,14 +16,24 @@
 **(Faster R-CNN 제외 : 커스텀 ealrystop 요구)**
 
 ## to do list 및 ckeck list
-```
+
 - 공식 tta 성능지표 확인 후 적용 가능시 적용시 비교
-- 각각 왜 이 모델을 썼는지 정확한 사항 기재
+- ~~각각 왜 이 모델을 썼는지 정확한 사항 기재~~ **완료**
 - 지표 및 성과 또한 정확히 공식 tta 기준 확인후 비교 지표로 지정
 - 15 분 발표 시간 맞추기
-```
+현업 사업 용역 : 
+https://vercel.com/docs
+https://vast.ai/pricing
+https://www.wishket.com/partners/
+https://cs.tta.or.kr/tta/introduce/introListR.do
+https://www.perplexity.ai/
 
-<span style="color: #FF5733;">이 텍스트는 지정된 색상으로 표시됩니다.</span>
+- 공식 tta 성능지표 확인 후 적용 가능시 적용시 비교
+
+- 왜 이 모델들을 썼는지 정확히
+- 지표 또한 정확히
+- 15 분
+- 성과 를 정확히
 
 # Oject Detection + classification 모델
 ### 사용 모델 : 
@@ -45,6 +55,7 @@
     ```
     **사전 학습 모델**
     객체 검출 사전 학습 모델 이용
+    쉽게 불러와 사용 가능 하다
     ```
 
 #### 언어 모델(Transformer based) :
@@ -65,9 +76,19 @@
   kogpt2 : 한국어에 특화된 gpt2 모델. 한국어에 대하여 자연스러운 생성 예상.
   gpt2 : 한국어 모델과 비교.
   ```
+
+### [api : 데이터 생성](code_data_gen/3_textdata_generating.ipynb)
+- chat gpt4o-mini
+  ```
+  기존 chat gpt4 에 비해 저렴하다.
+  ```
+- gemini-1.5-flash
+  ```
+  무료로 사용 가능. 하지만 요청 횟수가 제한되어 있다(15 요청/분)
+  ```
 ### 사용 데이터 셋 :
 - 이미지 데이터 셋: wassup 안면 데이터
-  - yolo 형식으로 annotation 변환 : [코드](code/1_2데이터_전처리_yolo.ipynb)
+  - 기본 json 형식을 yolo 형식으로 annotation 변환 : [코드](code/1_2데이터_전처리_yolo.ipynb)
   - yolo 형식에서 COCO데이터셋으로 변환 : [코드](code/1_3데이터_전처리_ssd,rcnn.ipynb)
 
 - 텍스트 데이터 셋 : 출력된 이미지 라벨[감정 분류 및 ,yolov8x-oiv7 출력] 을 이용하여 생성 : [코드](code_data_gen/3_textdata_generating.ipynb)
@@ -84,7 +105,7 @@
     sns 사진 요소 : {input_}
     sns 댓글 : """
     ```
-
+# 모델 학습 및 결과
 ## Obect Detection 1 : Faster R-CNN
 ### detectron2 from facebook
 - 기본적으로 detectron2 의 faster-rcnn 을 이용함
@@ -95,15 +116,20 @@
 
 ### 기본 정보
 ```
-- 소요 시간 : 진행중 ... (과적합 전까지의 소요 시간)
+- 소요 시간 : 8000 step / 7.61 시간
 - 필요 리소스 : 약 4GB의 메모리
+- 최종 metrics :
 ```
 
 ###  [**데이터 전처리**](code/1_3데이터_전처리_ssd,rcnn.ipynb)
+```
+기본 적으로 COCO 데이터 셋과동일한 형식
+문제 : 사진의 width 와 height를 불러올 때 올바르게 불러와 지지 않음
+해결 : => exif 를 이용하여 회전 데이터를 가져와서 적용함
+```
+- 전처리 코드 함수 정의
   ```py
-  # 기본 적으로 COCO 데이터 셋과동일한 형식
-  # 사진의 width 와 height를 불러올 때 올바르게 불러오지 않음
-    # => exif 를 이용하여 회전 데이터를 가져와서 적용함
+
     def read_image_size_from_exif(image_path):
       with Image.open(image_path) as img:
           # EXIF 데이터 가져오기
@@ -190,6 +216,7 @@
 - 소요 시간 : 약 7 시간 (총 63 에포크) - early stopping 까지의 시간
 - early stopping petient : 10
 - 필요 리소스 : 약 4GB의 메모리
+- 최종 metrics :
 ```
 
 ### [**데이터 전처리**](code/1_2데이터_전처리_yolo.ipynb)

@@ -18,3 +18,4 @@ tf-keras
 torch
 torchvision
 pillow
+rouge_score

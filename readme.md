@@ -106,6 +106,14 @@ https://www.perplexity.ai/
     sns 댓글 : """
     ```
 # 모델 학습 및 결과
+
+## 성과 성능 지표 설정
+
+### 언어 모델 : BLEU-N, METEOR, ROUGE-N
+### 객체 탐지 모델 : Macro Average, Weighted Average, Micro Average
+
+참조 : https://test.tta.or.kr/tta/main/main.do
+
 ## Obect Detection 1 : Faster R-CNN
 ### detectron2 from facebook
 - 기본적으로 detectron2 의 faster-rcnn 을 이용함

@@ -11,21 +11,60 @@
     pip install -r requiremets.txt
     ```
 
-**모든 모델에서 earlystopping ,patient = 10 이용**
+#### 공통 사항
+**모든 모델에서 earlystopping ,patient = 10 이용**<br>
+**(Faster R-CNN 제외 : 커스텀 ealrystop 요구)**
 
 ## to do list 및 ckeck list
 ```
 - 공식 tta 성능지표 확인 후 적용 가능시 적용시 비교
-
 - 각각 왜 이 모델을 썼는지 정확한 사항 기재
 - 지표 및 성과 또한 정확히 공식 tta 기준 확인후 비교 지표로 지정
 - 15 분 발표 시간 맞추기
 ```
+
+<span style="color: #FF5733;">이 텍스트는 지정된 색상으로 표시됩니다.</span>
+
 # Oject Detection + classification 모델
 ### 사용 모델 : 
-- faster_rcnn_R_50_FPN_3x : 얼굴 데이터 감정 분류 전이 **학습**
-- yolov10n : 얼굴 데이터 감정 분류 전이 **학습**
-- yolov8x-oiv7 : 객체 검출 사전 학습 모델 **이용**
+#### 오브젝트 디텍션 모델
+- detectron2 : https://github.com/facebookresearch/detectron2
+  - faster_rcnn_R_50_FPN_3x : 얼굴 데이터 감정 분류 **전이 학습**
+    ```
+    **전이 학습**
+    높은 정확도, 감정 분류에 이용, Yolo 와 성능 비교를 위해 사용 됨
+    ```
+
+- ultralytics : https://www.ultralytics.com/ko
+  - [yolov10n](https://github.com/THU-MIG/yolov10) : 얼굴 데이터 감정 분류 **전이 학습**
+    ```
+    **전이 학습**
+    빠른 추론 및 실시간 감정분류 가능, 적은 비용으로 좋은 성능을 냄, SOTA 모델
+    ```
+  - [yolov8x-oiv7](https://docs.ultralytics.com/ko/datasets/detect/open-images-v7/#open-images-v7-pretrained-models) 
+    ```
+    **사전 학습 모델**
+    객체 검출 사전 학습 모델 이용
+    ```
+
+#### 언어 모델(Transformer based) :
+- T5 **전이 학습**
+  - T5-base : https://huggingface.co/paust/pko-t5-base
+  - T5-large : https://huggingface.co/paust/pko-t5-large
+  ```
+  **전이 학습**
+  공통 : 상대적으로 LLM 보다 작은 모델임에도 정해진 테스크에서 높은 성능을 보임
+  비교를 위해 base 모델과 large 모델 이용
+  ```
+- gpt2 **전이 학습**
+  - kogpt2 : https://huggingface.co/skt/kogpt2-base-v2
+  - gpt2 : https://huggingface.co/openai-community/gpt2
+  ```
+  **전이 학습**
+  공통 : 트랜스 모델 기반의 모델로, 자유로운 텍스트 생성 능력이 뛰어남 llm들의 초기모델.
+  kogpt2 : 한국어에 특화된 gpt2 모델. 한국어에 대하여 자연스러운 생성 예상.
+  gpt2 : 한국어 모델과 비교.
+  ```
 ### 사용 데이터 셋 :
 - 이미지 데이터 셋: wassup 안면 데이터
   - yolo 형식으로 annotation 변환 : [코드](code/1_2데이터_전처리_yolo.ipynb)

@@ -122,3 +122,4 @@ models/faster_rcnn_R_50_FPN_3x/model_0023999.pth
 models/faster_rcnn_R_50_FPN_3x/model_24000.pth
 models/faster_rcnn_R_50_FPN_3x/model_final.pth
 models/faster_rcnn_R_50_FPN_3x/metrics_out/metrics_valid.json/instances_predictions.pth
+models/faster_rcnn_R_50_FPN_3x/faster_rcnn_r_50_final_model.pth

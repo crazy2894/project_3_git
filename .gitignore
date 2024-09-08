@@ -20,7 +20,7 @@ models/gpt2/kogpt2_1/
 models/gpt2/kogpt2_2/
 
 # yolo
-
+yolov10
 
 frontend/
 api.json
@@ -39,3 +39,5 @@ models/yolov10/runs/detect/train/val_batch2_pred.jpg
 models/yolov8x-oiv7.pt
 models/yolov10n-face.pt
 models
+
+output

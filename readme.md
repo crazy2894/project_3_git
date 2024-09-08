@@ -31,12 +31,15 @@ https://www.perplexity.ai/
 - 공식 tta 성능지표 확인 후 적용 가능시 적용시 비교
 
 - ~~왜 이 모델들을 썼는지 정확히~~ 완료
-- 지표 또한 정확히
+- 성과 지표 정확히
 - 15 분
-- 성과 를 정확히
+
+### what to do
+2024 - 09 - 08 : yolo 및 ssd 평가지표 기준으로 평가하기
+
 
 # Oject Detection + classification 모델
-### 사용 모델 : 
+### 사용 모델 및 이유 : 
 #### 오브젝트 디텍션 모델
 - detectron2 : https://github.com/facebookresearch/detectron2
   - faster_rcnn_R_50_FPN_3x : 얼굴 데이터 감정 분류 **전이 학습**
@@ -122,11 +125,11 @@ https://www.perplexity.ai/
   python -m pip install -e detectron2
   ```
 
-### 기본 정보
+### 최종 결과
 ```
-- 소요 시간 : 8000 step / 7.61 시간
+- 소요 시간 : 약 7000 step / 5.12 시간
 - 필요 리소스 : 약 4GB의 메모리
-- 최종 metrics :
+- 최종 metrics : mAP50 87.23 %
 ```
 
 ###  [**데이터 전처리**](code/1_3데이터_전처리_ssd,rcnn.ipynb)
@@ -217,14 +220,87 @@ https://www.perplexity.ai/
     cfg.SOLVER.LR_SCHEDULER_NAME = "WarmupCosineLR"
     cfg.SOLVER.WARMUP_ITERS = 500
     ```
+### 바운딩 박스 메트릭
+![rcnn_bb_mat](models/faster_rcnn_R_50_FPN_3x/metric_graphs/box_losses.png)
+1. **loss_box_reg (박스 회귀 손실)**:
+   - 전체적으로 감소하는 추세를 보이고 있음.
+   - 초기적인 값은 0.15 정도였으나, 점점 낮아져 0.09 근처로 안정화되고 있음.
+   - 이는 모델이 예측한 박스와 실제 박스 간의 차이를 줄이고 있다는 것을 의미함.
 
-## YOLOv10
+2. **loss_rpn_cls (RPN 클래스 손실)**:
+   - 이 손실 또한 감소하고 있지만, 중간에 약간의 변동성이 있음.
+   - 초기에는 약 0.00012 부근에서 시작했으며, 결국 0.00004로 떨어짐.
+   - RPN의 클래스 예측 정확성이 향상되고 있음을 나타냄.
+
+3. **loss_rpn_loc (RPN 위치 손실)**:
+   - 이 손실은 전체적으로 점진적으로 감소하는 경향이 있음.
+   - 초기 값은 약 0.0018에서 시작하여 현재는 0.0012 정도가 되어, 제안된 지역의 위치 예측이 정확해지고 있음을 보여줌.
+
+#### 요약
+종합적으로, 세 가지 손실 모두 감소하는 추세를 보이고 있으며, 이는 모델이 점차 더 나은 성능을 보이고 있음을 나타냄. 훈련이 진행됨에 따라 손실 값들이 안정화되고 있음을 통해 효과적인 학습이 이루어지고 있음을 알 수 있음.
+
+
+<details>
+  <summary>최종 결과 metrics</summary>
+
+- 최종 결과 metrics
+  | Metric                           | Value                      |
+  |----------------------------------|----------------------------|
+  | bbox/AP                          | 74.22026                   |
+  | bbox/AP-angry                    | 71.10707                   |
+  | bbox/AP-happy                    | 82.11466                   |
+  | bbox/AP-sad                      | 72.93612                   |
+  | bbox/AP-surprised                | 70.72321                   |
+  | bbox/AP50                        | 87.23360                   |
+  | bbox/AP75                        | 86.68937                   |
+  | bbox/APl                         | 74.22026                   |
+  | bbox/APm                         | 0                          |
+  | bbox/APs                         | 0                          |
+  | data_time                        | 1.57703                    |
+  | eta_seconds                      | 1503805.92043              |
+  | fast_rcnn/cls_accuracy           | 0.97681                    |
+  | fast_rcnn/false_negative         | 0.01034                    |
+  | fast_rcnn/fg_cls_accuracy        | 0.91069                    |
+  | iteration                        | 6999                       |
+  | loss_box_reg                     | 0.11586                    |
+  | loss_cls                         | 0.05802                    |
+  | loss_rpn_cls                     | 0.00005                    |
+  | loss_rpn_loc                     | 0.00145                    |
+  | lr                               | 0.0009997                  |
+  | rank_data_time                   | 1.57703                    |
+  | roi_head/num_bg_samples           | 103.09375                  |
+  | roi_head/num_fg_samples           | 24.90625                  |
+  | rpn/num_neg_anchors              | 252.15625                  |
+  | rpn/num_pos_anchors              | 3.84375                   |
+  | time                             | 2.52261                    |
+  | total_loss                       | 0.17474                    |
+
+</details>
+
+#### ap 에 대한 지표
+**[logs](logs/eval_validateion_of_rcnn.log)** <br>
+**[codes](code_metric_check/_Avarage%20Precision.ipynb)**
+```py
+Average Precision [ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.742
+Average Precision [ IoU=0.50      | area=   all | maxDets=100 ] = 0.872
+Average Precision [ IoU=0.75      | area=   all | maxDets=100 ] = 0.867
+Average Precision [ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+Average Precision [ IoU=0.50:0.95 | area=medium | maxDets=100 ] = -1.000
+Average Precision [ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.742
+Average Recall    [ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.859
+Average Recall    [ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.860
+Average Recall    [ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.860
+Average Recall    [ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+Average Recall    [ IoU=0.50:0.95 | area=medium | maxDets=100 ] = -1.000
+Average Recall    [ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.860
+```
+## Obect Detection 2 : YoLOv10
 ### 기본 정보
 ```
 - 소요 시간 : 약 7 시간 (총 63 에포크) - early stopping 까지의 시간
 - early stopping petient : 10
 - 필요 리소스 : 약 4GB의 메모리
-- 최종 metrics :
+- 최종 metrics : mAP50 89.81 %
 ```
 
 ### [**데이터 전처리**](code/1_2데이터_전처리_yolo.ipynb)
@@ -304,34 +380,95 @@ model_for_trian = YOLOv10("models/yolov10/pt_models/yolov10n.pt")
 model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience=10)
 ```
 - 소요 시간 : gpu 3060 - 63 epochs completed in 6.935 hours.
-- 에포크별 val 메트릭 비교
+### 바운딩 박스 메트릭
   ![epoch](models/yolov10/runs/detect/train/val_losses_comparison.png)
 
-  1. **val/box_om** 객체의 위치 예측(바운딩 박스)의 손실을
-      - 초기 손실이 비교적 높다가 epoch가 진행될수록 꾸준히 감소. 이는 모델이 학습하면서 점차 객체의 위치를 더 정확히 예측하고 있음
-  2. **val/cls_om (위 중간)** 클래스 분류에 대한 손실
-      - 처음에는 손실이 높지만 epoch가 진행됨에 따라 급격히 감소하고 이후 점진적으로 안정화. 모델이 객체를 올바르게 분류하는 능력이 개선.
-  3. **val/dfl_om (위 오른쪽)** Distribution Focal Loss 여러 클래스 간의 분포를 고려하여 손실을 계산
-      - epoch가 진행됨에 따라 약간 상승하는 패턴을 하지만 대부분의 경우 다른 손실들이 감소하고 있기 때문에 큰 문제 아니라 판단.
-  4. **val/box_oo (아래 왼쪽)**
-      - 모델이 점차 바운딩 박스를 더 정확하게 예측.
-  5. **val/cls_oo (아래 중간)**
-      - 모델의 분류 성능이 개선되고 있음을 보여줍니다.
-  6. **val/dfl_oo (아래 오른쪽)**
-      - DFL 손실의 또 다른 그래프입니다.
-      - 이 역시 초기에는 약간 높은 손실을 보이지만 이후 감소하고 안정화.
-- 요약
-    - 대부분의 손실 값들은 epoch가 진행됨에 따라 안정적으로 감소, 특히 **val/box_om**, **val/cls_om**, **val/box_oo**, **val/   cls_oo** 같은 주요 손실 항목들이 학습이 진행될수록 줄어들고 있어 모델의 성능이 개선되고 있음
-    - 다만 **val/dfl_om**은 epoch가 진행될수록 약간의 증가를 보이지만, 전체적인 트렌드를 크게 해치지 않으며 다른 손실들이 꾸준히    줄어들고 있으므로 모델 성능에는 큰 영향을 미치지 않을 거라고 예상. 
-    - 이 결과로 볼 때, 학습 과정이 잘 진행되고 있으며 모델의 성능이 점차 좋아지고 있는 것으로 해석
-- 최종 val/metrics
-  - f1 score
-    ![epoch](models/yolov10/runs/detect/train/PR_curve.png)
-  - PR curve
-    ![epoch](models/yolov10/runs/detect/train/F1_curve.png)
+  1. **val/box_om (상단 왼쪽)**:
+    - 초기에는 0.70 수준에서 시작하여 점진적으로 감소함.
+    - 약 10 에포크 이후 안정적인 수준으로 감소하여 0.54 근처로 수렴하고 있음.
+    - 모델이 예측한 박스의 정확도가 향상되고 있음을 나타냄.
 
-## Language Model
-### gpt 또는 gemini 를 이용한 데이터 셋 생성
+  2. **val/cls_om (상단 중앙)**:
+    - 이 손실 역시 초기에는 1.6 이상으로 시작하였으나, 이후 급격히 감소하여 0.6 이하로 떨어짐.
+    - 에포크 20 이후에는 안정적으로 유지되고 있으며, 모델의 클래스 예측 성능이 개선된 것을 의미함.
+
+  3. **val/dfl_om (상단 오른쪽)**:
+    - 초기에는 1.0 정도에서 시작하였고, 에포크가 진행됨에 따라 서서히 증가하여 1.01 수준까지  올라갔음.
+    - 전체적으로 안정세를 보이고 있음.
+
+  4. **val/box_oo (하단 왼쪽)**:
+    - 초기 값이 약 0.75에서 출발하여 빠른 속도로 감소함.
+    - 약 10 에포크 후 0.55 수준으로 안정화되고, 박스 예측 성능이 향상된 것을 보여줌.
+
+  5. **val/cls_oo (하단 중앙)**:
+    - 초기 값이 3.5 정도에서 시작하였으며, 급격히 감소하여 0.5 근처로 아 떨어짐.
+    - 모델의 클래스 예측 성능이 눈에 띄게 향상되었음을 나타냄.
+
+  6. **val/dfl_oo (하단 오른쪽)**:
+    - 초기에는 0.93 정도에서 출발하여 이후 점진적으로 감소하여 0.88 수준까지 떨어짐.
+    - 모델의 예측 성능이 꾸준히 개선되고 있음을 확인할 수 있음.
+
+#### 요약:
+![prgraph](models/yolov10/runs/detect/train/PR_curve.png)
+전체 그래프에서 보이는 경향은 손실 값들이 감소하고 있으며, 이는 모델의 성능이 개선되고 있음을 나타냄. 특히 클래스 손실과 박스 손실의 감소는 모델의 예측 정확도가 향상되고 있다는 긍정적인 신호임. 각 에포크에 따른 성능 변화가 안정적이기 때문에 학습 과정이 효과적으로 진행되고 있음을 알 수 있음.
+
+<details>
+  <summary>최종 결과 metrics</summary>
+
+최종 결과 metrics 로는 아래와 같다.
+| Metric                    | Value    |
+|---------------------------|----------|
+| Epoch                     | 53       |
+| Train Box OM              | 0.62436  |
+| Train Class OM            | 0.58579  |
+| Train DFL OM              | 0.99884  |
+| Train Box OO              | 0.69133  |
+| Train Class OO            | 0.57590  |
+| Train DFL OO              | 0.94041  |
+| Metrics Precision (B)     | 0.86438  |
+| Metrics Recall (B)        | 0.80065  |
+| Metrics mAP50 (B)         | 0.89814  |
+| Metrics mAP50-95 (B)      | 0.78219  |
+| Validation Box OM         | 0.53624  |
+| Validation Class OM       | 0.55669  |
+| Validation DFL OM         | 1.00460  |
+| Validation Box OO         | 0.54794  |
+| Validation Class OO       | 0.53841  |
+| Validation DFL OO         | 0.88608  |
+| Learning Rate PG0         | 0.0099495|
+| Learning Rate PG1         | 0.0099495|
+| Learning Rate PG2         | 0.0099495|
+
+</details>
+
+## object detection 성과 지표 비교
+🍿**[APcalc code](code_metric_check/_Avarage%20Precision.ipynb)**🍿
+- **Average Precision at IoU 50 and 50-95**<br>
+  - 검증 데이터 정보 val dataset test
+    ```
+    데이터 셋: wassup 얼굴 데이터 셋
+    총 갯수 : 1199 개의 사진 데이터
+    라벨 갯수 : 
+      anger : 300
+        sad : 300
+      panic : 300
+      happy : 299
+    ```
+
+  | 항목| YOLOv10n| RCNN|
+  |---|---|---|
+  | **AP 50**| **89.81**| **87.23**|
+  | **AP 50-95** | **78.22** | **74.20** |
+  | **time** |**1m 17s**|**2m 57s**|
+
+### 결론
+- **YOLOv10n**은 AP 50 및 AP 50-95 모두 RCNN보다 성능이 우수.
+- 이는 **YOLOv10n**이 다양한 객체 감지 상황에서 RCNN보다 더 정확한 결과를 제공할 수 있음을 시사합니다.
+- 즉 **YOLOv10n**의 정밀도와 안정성이 우수하다는 증거로 볼 수 있다.
+- 속도 또한 YOLOv10n 이 상대적으로 크게 빠른 것을 볼 수 있다.
+
+# Language Model
+## gpt 또는 gemini 를 이용한 데이터 셋 생성
 - 사용 데이터 셋 : [gpt 생성 데이터](data/text_data/output_text.json)
   - [gpt 생성 코드](code_data_gen/3_textdata_generating.ipynb)
   - 프롬프팅 : 
@@ -353,7 +490,7 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
     output_ = '아찔한 분위기네요! 🎧 어떤 음악 듣고 계신가요? 궁금해요! 😊'
     ```
 
-### t5 (Text-to-Text Transfer Transformer)
+## Language Model : t5 (Text-to-Text Transfer Transformer)
 
 - 학습 데이터 형식
   ```
@@ -376,7 +513,8 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
     - transfer_1 : 로컬 환경 및 기본 base 모델 이용
     - transfer_1_large_colab : colab 환경 및 large 모델이용
 
-  - t5 비교 그래프
+  - t5 loss 값 비교 그래프
+    - **LOSS(=Value)**
     ![비교 그래프](models/t5/val_loss_comparison.png)
   
   - 결론 : 세 모델의 큰 차이는 없어 보인다. 그러므로 이중 효율좋고 loss 최저값이 낮은 0번(default) 로 선택 
@@ -396,7 +534,7 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
 
 
 
-### gpt2 (*Language Models are* **Unsupervised** *Multitask Learners*)
+## Language Model : gpt2 (*Language Models are* **Unsupervised** *Multitask Learners*)
 - 즉 정답 라벨은 없다. (비지도 학습)
   - 학습 데이터 형식
     - 첫 번째 방식
@@ -466,6 +604,7 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
         max_grad_norm=1.0,
     ```
 - 비교 그래프
+  - **Loss(=Value)**
   ![비교 그래프](models/gpt2//val_loss_comparison.png)
 
 - 각 모델 최저 loss 및 스텝

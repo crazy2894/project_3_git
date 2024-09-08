@@ -4,20 +4,20 @@
 이 프로젝트는 SNS에 게시된 사진을 분석하고, 자동으로 적절한 댓글과 피드백을 생성하는 시스템을 개발하는 것을 목표로 합니다. 이를 위해 다양한 딥러닝 모델을 사용하여 이미지 내 객체를 탐지하고, 감정을 분류한 후, 텍스트 생성 모델을 활용해 자연스러운 댓글을 생성합니다.
 
 ### 프로젝트 설명
-#### 모델 선택 및 이유:
+#### 모델 선택 :
 
-객체 탐지: YOLOv10n과 Faster R-CNN을 사용하여 얼굴 감정 분류를 수행합니다. YOLO는 빠른 추론 시간과 높은 정확도로 실시간 감정 분류가 가능하며, RCNN은 전이 학습을 통해 감정 분류에 높은 성능을 보여줍니다.
-언어 모델: T5와 GPT-2 기반의 모델을 활용하여 SNS 사진에 대한 적절한 댓글을 생성합니다. T5 모델은 비교적 가벼우면서도 높은 성능을 자랑하고, GPT-2 모델은 자연스러운 텍스트 생성 능력이 뛰어납니다.
-데이터 처리 및 학습:
+- 객체 탐지: YOLOv10n과 Faster R-CNN을 사용하여 얼굴 감정 분류를 수행합니다. YOLO는 빠른 추론 시간과 높은 정확도로 실시간 감정 분류가 가능하며, RCNN은 전이 학습을 통해 감정 분류에 높은 성능을 보여줍니다.
 
-이미지 데이터: wassup 안면 데이터 셋을 사용하여 YOLO 형식의 어노테이션을 COCO 형식으로 변환해 모델 학습에 활용합니다.
+- 언어 모델: T5와 GPT-2 기반의 모델을 활용하여 SNS 사진에 대한 적절한 댓글을 생성합니다. T5 모델은 비교적 가벼우면서도 높은 성능을 자랑하고, GPT-2 모델은 자연스러운 텍스트 생성 능력이 뛰어납니다.
+
+#### 데이터 및 학습 평가 기준:
+
+- 이미지 데이터: wassup 안면 데이터 셋을 사용하여 기본 json 형식을 YOLO 형식으로 변환 하여 yolov10n 훈련에 이용하였고 yolo 의 어노테이션을 COCO 형식으로 변환해 faster rcnn 모델 학습에 활용 하였습니다.
 텍스트 데이터: 객체 탐지 결과를 바탕으로 생성된 라벨을 사용하여 텍스트 데이터를 생성하고, 이를 기반으로 학습합니다.
-모델 학습 및 평가:
 
-객체 탐지 모델은 다양한 성능 지표(AP50, AP50-95)를 사용하여 평가되며, YOLOv10n이 RCNN보다 우수한 성능을 보였습니다.
-텍스트 생성 모델은 BLEU, METEOR, ROUGE와 같은 언어 모델 성능 지표를 사용해 평가합니다.
+- 모델 학습 및 평가: 객체 탐지 모델은 다양한 성능 지표(AP50, AP50-95)를 사용하여 평가되며, YOLOv10n이 RCNN보다 우수한 성능을 보였습니다. 텍스트 생성 모델은 BLEU, METEOR, ROUGE와 같은 언어 모델 성능 지표를 사용해 평가합니다.
 
-### 프로젝트의 가치
+#### 프로젝트의 가치
 - 효율성 향상: SNS에서 사용자의 반응을 자동으로 생성함으로써 시간과 비용을 절감할 수 있습니다.
 - 정확한 감정 분석: 고도화된 감정 분류 모델을 통해 사용자의 감정 상태를 정확히 파악하고, 이를 바탕으로 맞춤형 피드백을 제공합니다.
 - 확장 가능성: 다양한 도메인에 적용 가능하며, 새로운 데이터셋과 요구사항에 맞게 쉽게 조정할 수 있습니다.
@@ -25,7 +25,7 @@
   (모델 크기 : gpt2- 500mb 미만, t5 - 1gb 수준, yolov5n -5mb 수준, r-cnn - 400mb 수준)
   (llava 모델 크기 : 약 15 gbhttps://huggingface.co/llava-hf/llava-1.5-7b-hf/tree/main, 훈련 시 약 30gb 이상의 memory를 요구한다.)
 
-### 주요 성과
+#### 주요 성과
 **YOLOv10n은 mAP50 89.81%**, **RCNN은 87.23%**, **YOLOv10n**이 더 높은 성능을 보였습니다.
 언어 모델 평가에서 **BLEU-N, METEOR, ROUGE-N 등의 지표를 사용하여 성능을 검증**하였으며,
 사람이 판단 하기에도 특히 t5 에서 텍스트 생성 결과가 상당히 만족스러운 수준임을 확인했습니다.
@@ -47,31 +47,7 @@
 
 #### 공통 사항
 **모든 모델에서 earlystopping ,patient = 10 이용**<br>
-**(Faster R-CNN 제외 : 커스텀 ealrystop 요구)**
-
-## to do list 및 ckeck list
-
-현업 사업 용역 : 
-https://vercel.com/docs
-https://vast.ai/pricing
-https://www.wishket.com/partners/
-https://cs.tta.or.kr/tta/introduce/introListR.do
-https://www.perplexity.ai/
-
-- ~~공식 tta 성능지표 확인 후 적용 가능시 적용시 비교~~ **완료**
-- ~~각각 왜 이 모델을 썼는지 정확한 사항 기재~~ **완료**
-- ~~지표 및 성과 또한 정확히 공식 tta 기준 확인후 비교 지표로 지정~~ **완료**
-- ~~공식 tta 성능지표 확인 후 적용 가능시 적용시 비교~~ **완료**
-- ~~왜 이 모델들을 썼는지 정확히~~ **완료**
-- ~~성과 지표 정확히~~ **완료**
-- ~~2024 - 09 - 08 : yolo 및 ssd 평가지표 기준으로 평가하기~~ **완료**
-
-- 15 분 발표 시간 맞추기
-
-
-### what to do
-
-
+**(Faster R-CNN 제외 : 이유 - 커스텀 ealrystop 요구)**
 
 # Oject Detection + classification 모델
 ### 사용 모델 및 이유 : 
@@ -162,9 +138,11 @@ https://www.perplexity.ai/
 
 ### 최종 결과
 ```
+- 사용 자원 : gpu rtx3060 12gb
 - 소요 시간 : 약 7000 step / 5.12 시간
 - 필요 리소스 : 약 4GB의 메모리
 - 최종 metrics : mAP50 87.23 %
+- 최종 모델 크기 : 314mb
 ```
 
 ###  [**데이터 전처리**](code/1_3데이터_전처리_ssd,rcnn.ipynb)
@@ -332,10 +310,13 @@ Average Recall    [ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.860
 ## Obect Detection 2 : YoLOv10
 ### 기본 정보
 ```
+- 사용 자원 : gpu rtx3060 12gb
 - 소요 시간 : 약 7 시간 (총 63 에포크) - early stopping 까지의 시간
 - early stopping petient : 10
 - 필요 리소스 : 약 4GB의 메모리
 - 최종 metrics : mAP50 89.81 %
+
+- 최종 모델 크기 : 5.46mb
 ```
 
 ### [**데이터 전처리**](code/1_2데이터_전처리_yolo.ipynb)
@@ -414,7 +395,7 @@ from ultralytics.models import YOLOv10
 model_for_trian = YOLOv10("models/yolov10/pt_models/yolov10n.pt")
 model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience=10)
 ```
-- 소요 시간 : gpu 3060 - 63 epochs completed in 6.935 hours.
+
 ### 바운딩 박스 메트릭
   ![epoch](models/yolov10/runs/detect/train/val_losses_comparison.png)
 
@@ -527,6 +508,20 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
 
 ## Language Model : t5 (Text-to-Text Transfer Transformer)
 
+```
+t5-base 사용 자원 : gpu rtx3060 12gb 
+t5-large 사용 자원 : colab a100 40gb
+
+- 최저 loss
+  - default = 0.1783
+  - setting 1 = 0.1790
+  - setting 1 with colab = 0.1745
+
+- 최종 모델 사이즈
+  t5-base : 1.02GB
+  t5-large : 3.05GB
+
+```
 - 학습 데이터 형식
   ```
   input_data = ['슬픔, 분노', ...]
@@ -534,8 +529,15 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
   ```
 
 #### 모델 훈련
-  - transfer_0 : 기본값으로 훈련
-  - transfer_1 : 
+
+**[default 훈련](code/3_t5_2_transfer_0.ipynb)<br>**
+**[setting 1 훈련](code/3_t5_2_transfer_1.ipynb)<br>**
+**[setting 2 훈련](code/3_t5_2_transfer_1_large_colab.ipynb)<br>**
+
+  - default 훈련 : 로컬 환경 및 기본값으로 훈련
+    - 소요 시간 : 1 시간 21 분, 17 에포크 early stopped
+
+  - setting 1 훈련 : 로컬 환경 및 기본 base 모델 이용
     - 드롭아웃 비율 0.1 -> 0.2
     - 훈련시 추가 인자
       ```
@@ -545,69 +547,83 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
       weight_decay=0.01,           # l2 정규화 기법 중 하나
       max_grad_norm=1.0,           # 그라디언트 클리핑
       ```
-    - transfer_1 : 로컬 환경 및 기본 base 모델 이용
-    - transfer_1_large_colab : colab 환경 및 large 모델이용
+    - 소요 시간 : 1 시간 32분, 18 에포크 early stopped
 
-  - t5 loss 값 비교 그래프
-    - **LOSS(=Value)**
-    ![비교 그래프](models/t5/val_loss_comparison.png)
-  
-  - 결론 : 세 모델의 큰 차이는 없어 보인다. 그러므로 이중 효율좋고 loss 최저값이 낮은 0번(default) 로 선택 
-    - 각 모델별 특징
-    ```text
-    # loss 최저
-    - default = 0.1783
-    - setting 1 = 0.1790
-    - setting 1 with colab = 0.1745
+  - setting 2 훈련 : colab 환경 및 large 모델이용
+    - 드롭아웃 비율 0.1 -> 0.2
+    - 훈련시 추가 인자
+      ```
+      learning_rate=5e-5,          # 기본값에서 시작
+      lr_scheduler_type="linear",  # 스케줄러
+      warmup_steps=500,            # 500 스텝 동안 학습률을 점진적으로 증가
+      weight_decay=0.01,           # l2 정규화 기법 중 하나
+      max_grad_norm=1.0,           # 그라디언트 클리핑
+      ```
+    - 소요 시간 : 1 시간 17분 , 16 에포크 earlystopped
 
-    # 요구 vram
-    - default = 6gb
-    - setting 1 = 6gb
-    - setting 1 with colab = 29gb
-    ```
-
-
+- t5 loss 값 비교 그래프
+  - **LOSS(=Value)**
+  ![비교 그래프](models/t5/val_loss_comparison.png)
+  - 결론 : 세 모델의 큰 차이는 없어 보인다.
 
 
 ## Language Model : gpt2 (*Language Models are* **Unsupervised** *Multitask Learners*)
-- 즉 정답 라벨은 없다. (비지도 학습)
-  - 학습 데이터 형식
-    - 첫 번째 방식
-      ```
-      input_data = ['슬픔, 분노, 감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
-      ```
-    - 두 번째 방식
 
-      또는 텍스트 로 시퀀스 데이터 안에 명시한다.
-      ```
-      input_data = ['입력 : 슬픔, 분노 \n 출력 : 감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
-      ```
-      또한 예측시 모델의 입력값으로 ```'입력 : 슬픔, 분노 \n 출력 : ``` 와 같이 입력하여 출력값을 얻어야함
+```
+gpt 2
+사용 자원 : gpu rtx3060 12gb 
+배치 : 16
+vram 요구 : 약 6gb
+
+kogpt2
+사용 자원 : gpu rtx3060 12gb 
+배치 : 10
+vram 요구 : 약 5gb
+
+- 각 모델 최저 loss
+  - kogpt2_0 loss : 0.293683
+  - kogpt2_1 loss : 0.293336
+  - kogpt2_2 loss : 0.72245
+  - gpt2_base_0 loss : 0.716322
+  - gpt2_base_1 loss : 0.925404
+
+- 각 최종 모델 용량 사이즈
+  - kogpt2_0 : 477mb
+  - kogpt2_1 : 477mb
+  - kogpt2_2 : 477mb
+  - gpt2_base_0 : 471mb
+  - gpt2_base_1 : 471mb
+```
+
+- 학습 데이터 형식
+  ```
+  첫 번째 방식
+    input_data = ['슬픔, 분노, 감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
+
+  두 번째 방식
+    input_data = ['입력 : 슬픔, 분노 \n 출력 : 감정이 복잡해 보이네요… 힘든 날이신가요? ❤️', ... ]
+
+    또한 예측시 모델의 입력값으로 ```'입력 : 슬픔, 분노 \n 출력 : ``` 와 같이 입력하여 출력값을 얻어야함
+  ```
 
 - skt 의 kogpt2 이용 : https://huggingface.co/skt/kogpt2-base-v2
   - 시도 0
     ```py
-    배치 : 16
-    vram 요구 : 약 6gb
     입력 데이터 형식 : 첫 번째 방식의 학습 데이터
     하이퍼 파라미터 : 기본 값
     ```
   - 시도 1
     ```py
-    배치 : 16
-    vram 요구 : 약 6gb
     입력 데이터 형식 : 첫 번째 방식의 학습 데이터
     하이퍼 파라미터 :
         learning_rate=5e-5,
         lr_scheduler_type="linear",
         warmup_steps=500,
-        weight_decay=0.01[
+        weight_decay=0.01,
         max_grad_norm=1.0,
     ```
   - 시도 2
     ```py
-    배치 : 16
-    vram 요구 : 약 6gb
     입력 데이터 형식 : 두 번째 방식의 학습 데이터
     하이퍼 파라미터 :
       learning_rate=5e-5,
@@ -620,16 +636,13 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
 
 - open ai 의 gpt2-base 이용 : https://huggingface.co/openai-community/gpt2
   - 시도 0
-    ```py
-    배치 : 10
-    vram 요구 : 약 5gb
+    ```
     입력 데이터 형식 : 두 번째 방식의 학습 데이터
     하이퍼 파라미터 : 기본 값
     ```
   - 시도 1
     ```py
     배치 : 10
-    vram 요구 : 약 5gb
     입력 데이터 형식 : 두 번째 방식의 학습 데이터
     하이퍼 파라미터 :
         learning_rate=5e-5,
@@ -642,12 +655,6 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
   - **Loss(=Value)**
   ![비교 그래프](models/gpt2//val_loss_comparison.png)
 
-- 각 모델 최저 loss 및 스텝
-  - kogpt2_0 loss : 0.293683
-  - kogpt2_1 loss : 0.293336
-  - kogpt2_2 loss : 0.72245
-  - gpt2_base_0 loss : 0.716322
-  - gpt2_base_1 loss : 0.925404
 ## 언어 모델 성과 지표 비교 [BLEU-n](logs/LMmodel_BLEU.log), [METEOR](logs/LMmodel_METEOR.log), [ROUGE](logs/LMmodel_ROUGE.log)
 
 ### 🍿[코드](code_metric_check/_BLUE_Metero_ROUGE.ipynb)🍿

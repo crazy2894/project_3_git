@@ -114,7 +114,7 @@ https://www.perplexity.ai/
 ## 성과 성능 지표 설정
 
 ### 언어 모델 : BLEU-N, METEOR, ROUGE-N
-### 객체 탐지 모델 : Macro Average, Weighted Average, Micro Average
+### ~~객체 탐지 모델 : Macro Average, Weighted Average, Micro Average~~ -> 데이터 셋 균형이 잘 맞으므로 mAP50 과 mAP50-95 이용
 
 참조 : https://test.tta.or.kr/tta/main/main.do
 
@@ -641,7 +641,7 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
 ### 결론 GPT2 VS T5
 
 - 현 프로젝트에서 gpt2 계열 모델중 kogpt 보다 gpt2 기본 모델의 성능의 결과가 더 좋았다
-- 또한 모든 평가 지표에서 가장 좋은 모델은 **T5-base** 모델 이었다.
+- 또한 대부분의 평가 지표에서 가장 좋은 모델은 **T5-base** 모델 이었다.
 
 ## 모델 연결 파이프 라인
 

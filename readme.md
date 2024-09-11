@@ -132,7 +132,7 @@
 ## 성과 성능 지표 설정
 
 ### 언어 모델 : BLEU-N, METEOR, ROUGE-N
-### ~~객체 탐지 모델 : Macro Average, Weighted Average, Micro Average~~ -> 데이터 셋 균형이 잘 맞으므로 mAP50 과 mAP50-95 이용
+### 데이터 셋 균형이 잘 맞으므로 mAP50 과 mAP50-95 이용
 
 참조 : https://test.tta.or.kr/tta/main/main.do
 

@@ -1,5 +1,50 @@
 # SNS 사진 분석 댓글 및 피드백 프로젝트
 
+  ### 파일 구조
+
+  ```bash
+  ├── code
+  │   ├── 1_1데이터_확인.ipynb
+  │   ├── 1_2데이터_전처리_yolo.ipynb
+  │   ├── 1_3데이터_전처리_rcnn.ipynb
+  │   ├── 2_RCNN_0_transfer.ipynb
+  │   ├── 2_YOLO_1_transfer_0.ipynb
+  │   ├── 2_YOLO_1_transfer_1.ipynb
+  │   ├── 2_YOLO_2_lvis.ipynb
+  │   ├── 3_gpt2_1_0_gpt2_base_0.ipynb
+  │   ├── 3_gpt2_1_0_gpt2_base_1.ipynb
+  │   ├── 3_gpt2_2_0_gpt2_toydata.ipynb
+  │   ├── 3_gpt2_2_kogpt2_1.ipynb
+  │   ├── 3_gpt2_2_kogpt2_2.ipynb
+  │   ├── 3_t5_1_toydata.ipynb
+  │   ├── 3_t5_2_transfer_0.ipynb
+  │   ├── 3_t5_2_transfer_1_large_colab.ipynb
+  │   ├── 3_t5_2_transfer_1.ipynb
+  │   ├── 99_pipe_line.ipynb
+  ├── code_data_gen
+  │   ├── 1_chat_gpt_translate.ipynb
+  │   ├── 2_image_pred_and_gen.ipynb
+  │   ├── 3_textdata_generating.ipynb
+  ├── code_metric_check
+  │   ├── _Avargae_Precision.ipynb
+  │   ├── _BLUE_Metero_ROUGE.ipynb
+  │   ├── gpt2_metrics.ipynb
+  │   ├── r-cnn_metrics.ipynb
+  │   ├── t5_metrics.ipynb
+  │   ├── yolo_metrics.ipynb
+  ├── data
+  ├── detectron2
+  ├── logs
+  ├── models
+  ├── output
+  │   ├── yolov10/runs/detect/val
+  ├── .gitignore
+  ├── apijson
+  ├── readme.md
+  ├── requirements.txt
+  ├── test.png
+  ```
+
 ### 개요 :
 이 프로젝트는 SNS에 게시된 사진을 분석하고, 자동으로 적절한 댓글과 피드백을 생성하는 시스템을 개발하는 것을 목표로 합니다. 이를 위해 다양한 딥러닝 모델을 사용하여 이미지 내 객체를 탐지하고, 감정을 분류한 후, 텍스트 생성 모델을 활용해 자연스러운 댓글을 생성합니다.
 
@@ -847,39 +892,5 @@ if __name__ == "__main__":
 
 ##### yolov10n-face + yolov8x-oiv7 + gpt2
 입력값: 공포,모자 | 출력값 : 모자 안에서 느껴지는 공포감이 느껴지네요! 😱 분위기가 정말 강렬해요! 🖤 �
-
----
-<details>
-  <summary>파일 구조</summary>
-  
-  ### 2024-09-02
-    code\1_데이터_확인.ipynb  : fix
-    requiremets.txt         : 필요한 라이브러로 수정(업데이트 중)
-  ## 파일 구조
-
-  ### 📁 code : 모델 훈련 및 예측, 데이터 확인관련 코드
-  ```text
-  1_데이터 확인.ipynb           # 데이터 확인 코드
-  2_od_YOLO_finetunning.ipynb  # wassup 얼굴 데이터 전이학습
-  2_od_YOLO_lvis.ipynb         # lvis 데이터셋 전이학습
-  3_lm_gpt2finetunning         # gpt2 전이학습
-  3_lm_t5                      # t5 전이학습
-  4_pipe_line                  # 입력단부터 최종 출력단 까지으 파이프라인
-  ```
-  
-  ### 모델 설명
-  ```text
-  yolov8m-oiv7.pt              # 객체 검출 모델 중간 사이즈
-  yolov8x-oiv7.pt              # 객체 검출 모델 라지 사이즈
-  yolov10n-face.pt             # wassup dataset으로 전이학습한 모델
-  ```
-  
-  ### 📁 code_data_gen : api 를 이용한 코드
-  ```text
-  1_chat_gpt_translate.ipynb   # 텍스트 번역 모델 (oiv7 의 정답 라벨 번역을 위한 코드)
-  2_img_pred_and_gen.ipynb     # 이미지를 모델 입력 후 출력 값을 결과를 저장하는 코드
-  3_textdata_generating.ipynb  # text to text 로 댓글 데이터 생성 코드
-  ```
-</details>
 
 # 링크 : [진행과정 표](https://docs.google.com/spreadsheets/d/1OklwBcfJiqlj7JJHE1Pez9jpgLctun0BPKrBD4HW2A0/edit?gid=1967477975#gid=1967477975) , [기획안](https://docs.google.com/presentation/d/1HKMJk6zLfsEqedcVdcQipHY8V8snd6oP2ajS9FDFgKI/edit#slide=id.p), 

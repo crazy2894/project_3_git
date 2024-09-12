@@ -20,7 +20,6 @@ models/gpt2/kogpt2_1/
 models/gpt2/kogpt2_2/
 
 # yolo
-yolov10
 
 frontend/
 api.json
@@ -36,9 +35,18 @@ models/yolov10/runs/detect/train/val_batch1_labels.jpg
 models/yolov10/runs/detect/train/val_batch1_pred.jpg
 models/yolov10/runs/detect/train/val_batch2_labels.jpg
 models/yolov10/runs/detect/train/val_batch2_pred.jpg
+
+models/yolov10/runs/detect/val/val_batch0_labels.jpg
+models/yolov10/runs/detect/val/val_batch0_pred.jpg
+models/yolov10/runs/detect/val/val_batch1_labels.jpg
+models/yolov10/runs/detect/val/val_batch1_pred.jpg
+models/yolov10/runs/detect/val/val_batch2_labels.jpg
+models/yolov10/runs/detect/val/val_batch2_pred.jpg
+
+
 models/yolov8x-oiv7.pt
 models/yolov10n-face.pt
-
+modles/yolov10/train/weights
 output
 
 # 모델 파일

@@ -479,6 +479,7 @@ model_for_trian.train(data="wassup_data.yaml", epochs=10000, imgsz=512, patience
     - 모델의 예측 성능이 꾸준히 개선되고 있음을 확인할 수 있음.
 
 #### 요약:
+![prgraph](models/yolov10/runs/detect/train/PR_curve.png)
 전체 그래프에서 보이는 경향은 손실 값들이 감소하고 있으며, 이는 모델의 성능이 개선되고 있음을 나타냄. 특히 클래스 손실과 박스 손실의 감소는 모델의 예측 정확도가 향상되고 있다는 긍정적인 신호임. 각 에포크에 따른 성능 변화가 안정적이기 때문에 학습 과정이 효과적으로 진행되고 있음을 알 수 있음.
 
 <details>
@@ -892,39 +893,5 @@ if __name__ == "__main__":
 
 ##### yolov10n-face + yolov8x-oiv7 + gpt2
 입력값: 공포,모자 | 출력값 : 모자 안에서 느껴지는 공포감이 느껴지네요! 😱 분위기가 정말 강렬해요! 🖤 �
-
-### llava 모델과 비교 및 추후 가능성 예상
-
-#### [llava test code](https://colab.research.google.com/drive/1UeCWCG7m9HWVabpa8pnpeAWhjtR5yRhb?usp=sharing)
-
-- prompt : 
-긍정적 댓글(한국어):
-주어진 이미지에 대한 긍정적이고 고양되는 의견을 생성하십시오.
-
-- 결과:
-
-  - 이미지에있는 남자는 배낭과 모자를 쓰고 있는데, 이는 모험을하거나 새로운 장소를 탐험 할 수 있음을 시사합니다.그의 복장과 배낭은 그가 앞으로의 여행을 준비하고 있음을 나타냅니다.<br>
-  그의 미소는 그가 경험을 즐기고 있음을 시사합니다.<br>
-  이미지는 남자가 앞으로의 모험을 받아들이면서 행복과 흥분의 순간을 포착합니다.
-
-- 모델 사이즈 (요구 vram : 15gb)
-
-- 추후 라바 모델을 fine 튜닝 하게된다면 이를 유료 서비스로 넣을 수 있을 것 같다.
-  ```
-  좀 더 상세하고, 정확한 답변이 가능하다 하지만,
-  단순 예측 시에도 15gb 라는 큰 vram이 요구 되며
-  기본적으로 훈련시 필요한 데이터, 모델의 기본 구조의 복잡성으로 인해 상당히 큰 vram을 요구 할 것이라 예상.
-
-  https://llava-vl.github.io/blog/2024-01-30-llava-next/
-  https://github.com/haotian-liu/LLaVA/releases
-
-  에 따르면 라바 모델의 파라미터는 7B, 13B, 34B 정도 가 있고
-  A100 (80G) X 8ea 이용시, LLaVA-v1.5-7B 는 3.5 시간정도가 걸렸고LLaVA-v1.5-13B 는 하루 정도가 걸렸다.
-
-  또한 gpu의 리소스를 줄이고 효율적으로 이용하려면 RoLA 를 이용하고
-  LoRA 사용 하여 :8-A100-40G/8-A6000에서 13B 훈련과 8-RTX3090에서 7B 훈련을 맞출 수 있습니다. 
-  ```
-
-#### 
 
 # 링크 : [진행과정 표](https://docs.google.com/spreadsheets/d/1OklwBcfJiqlj7JJHE1Pez9jpgLctun0BPKrBD4HW2A0/edit?gid=1967477975#gid=1967477975) , [기획안](https://docs.google.com/presentation/d/1HKMJk6zLfsEqedcVdcQipHY8V8snd6oP2ajS9FDFgKI/edit#slide=id.p), 
